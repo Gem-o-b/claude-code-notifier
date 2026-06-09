@@ -41,8 +41,11 @@ async function runTest() {
 }
 
 function runInstall() {
-  const { settingsPath, configCreated } = installHooks();
+  const { settingsPath, configCreated, useBin } = installHooks();
   process.stdout.write(`[claude-code-notifier] hook 등록 완료 → ${settingsPath}\n`);
+  process.stdout.write(
+    `[claude-code-notifier] hook 형태: ${useBin ? '`claude-code-notifier hook …` (PATH, 위치 독립)' : '`node "…/cli.js" hook …` (절대경로)'}\n`,
+  );
   process.stdout.write(
     configCreated
       ? `[claude-code-notifier] 기본 설정 생성 → ${CONFIG_PATH}\n`

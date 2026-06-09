@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 import { homedir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,14 +11,31 @@ const SETTINGS_PATH = join(homedir(), '.claude', 'settings.json');
 /** 이 hook이 호출할 cli.js 절대 경로. */
 const CLI_PATH = fileURLToPath(new URL('./cli.js', import.meta.url));
 
+const BIN = 'claude-code-notifier';
+
 const EVENTS = [
   { key: 'Stop', arg: 'stop' },
   { key: 'Notification', arg: 'notification' },
 ];
 
-/** 우리가 등록하는 hook 명령 문자열. */
-function hookCommand(arg) {
-  return `node "${CLI_PATH}" hook ${arg}`;
+/** `claude-code-notifier` 명령이 PATH에서 해석되는지 (npm link / -g 설치 여부). */
+function binOnPath() {
+  try {
+    const probe = process.platform === 'win32' ? `where ${BIN}` : `command -v ${BIN}`;
+    execSync(probe, { stdio: 'ignore' });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * 우리가 등록하는 hook 명령 문자열.
+ * PATH에 bin이 있으면 위치 독립적인 `claude-code-notifier hook <event>` 형태,
+ * 없으면 cli.js 절대경로 형태로 폴백한다.
+ */
+function hookCommand(arg, useBin) {
+  return useBin ? `${BIN} hook ${arg}` : `node "${CLI_PATH}" hook ${arg}`;
 }
 
 /**
@@ -63,14 +81,15 @@ function stripOurs(groups) {
 export function installHooks() {
   const settings = readSettings();
   settings.hooks = settings.hooks || {};
+  const useBin = binOnPath();
   for (const { key, arg } of EVENTS) {
     const cleaned = stripOurs(settings.hooks[key]);
-    cleaned.push({ hooks: [{ type: 'command', command: hookCommand(arg) }] });
+    cleaned.push({ hooks: [{ type: 'command', command: hookCommand(arg, useBin) }] });
     settings.hooks[key] = cleaned;
   }
   writeSettings(settings);
   const configCreated = ensureDefaultConfig();
-  return { settingsPath: SETTINGS_PATH, configCreated };
+  return { settingsPath: SETTINGS_PATH, configCreated, useBin };
 }
 
 /**
