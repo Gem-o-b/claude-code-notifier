@@ -33,7 +33,7 @@ Claude Code는 특정 시점에 명령을 실행할 수 있습니다. `claude-co
 > 프로토타입 단계 — 소스에서 설치합니다. (npm 공개 예정)
 
 ```bash
-git clone https://github.com/OWNER/claude-code-notifier.git
+git clone https://github.com/Gem-o-b/claude-code-notifier.git
 cd claude-code-notifier
 npm install
 node src/cli.js install

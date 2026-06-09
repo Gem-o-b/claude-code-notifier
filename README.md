@@ -33,7 +33,7 @@ Each event runs `claude-code-notifier hook <event>`, which reads the session inf
 > Prototype stage — install from source. (npm publish is planned.)
 
 ```bash
-git clone https://github.com/OWNER/claude-code-notifier.git
+git clone https://github.com/Gem-o-b/claude-code-notifier.git
 cd claude-code-notifier
 npm install
 node src/cli.js install

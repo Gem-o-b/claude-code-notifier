@@ -2,10 +2,33 @@
   "name": "claude-code-notifier",
   "version": "0.0.1",
   "description": "Notify when a Claude Code session finishes or waits for input — across terminals and OSes.",
+  "keywords": [
+    "claude",
+    "claude-code",
+    "notification",
+    "notifier",
+    "toast",
+    "hook",
+    "cli"
+  ],
+  "homepage": "https://github.com/Gem-o-b/claude-code-notifier#readme",
+  "bugs": {
+    "url": "https://github.com/Gem-o-b/claude-code-notifier/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gem-o-b/claude-code-notifier.git"
+  },
+  "license": "MIT",
+  "author": "Gem-o-b <clickyour@gmail.com>",
   "type": "module",
   "bin": {
     "claude-code-notifier": "src/cli.js"
   },
+  "files": [
+    "src",
+    "assets"
+  ],
   "scripts": {
     "test": "node --test"
   },
@@ -14,6 +37,5 @@
   },
   "dependencies": {
     "node-notifier": "^10.0.1"
-  },
-  "license": "MIT"
+  }
 }
