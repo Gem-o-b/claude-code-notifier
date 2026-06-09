@@ -1,0 +1,19 @@
+{
+  "name": "claude-code-notifier",
+  "version": "0.0.1",
+  "description": "Notify when a Claude Code session finishes or waits for input — across terminals and OSes.",
+  "type": "module",
+  "bin": {
+    "claude-code-notifier": "src/cli.js"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "node-notifier": "^10.0.1"
+  },
+  "license": "MIT"
+}
