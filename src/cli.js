@@ -21,8 +21,9 @@ async function readStdinJson() {
 
 /** 이벤트에 맞는 활성 채널로 알림을 발사한다. */
 async function alert(ctx) {
-  const enabled = enabledChannels(loadConfig(), ctx.event);
-  await dispatch(ctx, enabled);
+  const config = loadConfig();
+  const enabled = enabledChannels(config, ctx.event);
+  await dispatch(ctx, enabled, config.channels || {});
 }
 
 async function runHook(event) {

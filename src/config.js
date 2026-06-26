@@ -5,13 +5,16 @@ import { join, dirname } from 'node:path';
 export const CONFIG_PATH = join(homedir(), '.claude-code-notifier', 'config.json');
 
 /**
- * 이벤트별 채널 on/off 기본값.
+ * 이벤트별 채널 on/off 기본값 + 채널 설정.
  * window(터미널 벨/탭 강조)는 터미널 설정 의존이라 세션 안 실효성이 낮아 기본 OFF.
  * toast(항상 동작) + sound(구분되는 소리)만 기본 ON.
+ * webhook/telegram은 URL·토큰 설정이 필요하므로 기본 OFF.
+ * channels: 메신저 채널의 URL/토큰 등 설정·비밀값 (로컬에만 저장).
  */
 export const DEFAULT_CONFIG = {
-  stop: { window: false, toast: true, sound: true },
-  notification: { window: false, toast: true, sound: true },
+  stop: { window: false, toast: true, sound: true, webhook: false, telegram: false },
+  notification: { window: false, toast: true, sound: true, webhook: false, telegram: false },
+  channels: {},
 };
 
 /** 설정 파일을 읽는다. 없거나 깨졌으면 기본값을 반환한다. */
@@ -22,6 +25,7 @@ export function loadConfig() {
     return {
       stop: { ...DEFAULT_CONFIG.stop, ...(parsed.stop || {}) },
       notification: { ...DEFAULT_CONFIG.notification, ...(parsed.notification || {}) },
+      channels: { ...(parsed.channels || {}) },
     };
   } catch {
     return DEFAULT_CONFIG;
