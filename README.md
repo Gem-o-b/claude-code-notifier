@@ -77,8 +77,12 @@ node src/cli.js install
 
 ```jsonc
 {
-  "stop":         { "window": false, "toast": true, "sound": true },
-  "notification": { "window": false, "toast": true, "sound": true }
+  "stop":         { "window": false, "toast": true, "sound": true, "webhook": false, "telegram": false },
+  "notification": { "window": false, "toast": true, "sound": true, "webhook": false, "telegram": false },
+  "channels": {
+    "webhook":  { "url": "https://hooks.slack.com/services/XXX/YYY/ZZZ" },
+    "telegram": { "botToken": "123456:ABC-DEF...", "chatId": "987654321" }
+  }
 }
 ```
 
@@ -87,10 +91,28 @@ node src/cli.js install
 | `toast` | OS desktop notification with project name + path | **on** |
 | `sound` | Distinctive completion / waiting sound | **on** |
 | `window` | Terminal bell + tab title (flashes taskbar/tab) | off |
+| `webhook` | POST to any URL — Slack / Discord / ntfy / custom | off |
+| `telegram` | Telegram bot message to your chat | off |
 
 ### About the `window` channel
 
 The `window` channel emits a terminal bell and a tab-title update. Whether that produces a *visible* flash depends on your terminal's bell settings, and inside a Claude Code session the tab title is managed by Claude Code itself — so it's **off by default**. If you want it, enable it in the config and turn on a visual bell in your terminal (e.g. Windows Terminal → *Bell notification style* → "Window"/"Taskbar").
+
+### Messenger channels (reach you away from the desk)
+
+Toast and sound only work at your machine. The `webhook` and `telegram` channels push to your phone/team. Put credentials under `channels` (stored locally only, never in the repo) and flip the per-event toggle to `true`.
+
+**Generic `webhook`** — set `channels.webhook.url`. The body includes both `text` (Slack) and `content` (Discord), plus structured fields, so it works out of the box with:
+- **Slack** — create an [Incoming Webhook](https://api.slack.com/messaging/webhooks) and use its URL.
+- **Discord** — Server Settings → Integrations → Webhooks → New Webhook → copy URL.
+- **ntfy** — use `https://ntfy.sh/your-topic` (or your self-hosted server).
+
+**`telegram`** — set `channels.telegram.botToken` and `chatId`:
+1. In Telegram, message [@BotFather](https://t.me/BotFather) → `/newbot` → copy the bot token.
+2. Start a chat with your new bot (send it any message).
+3. Open `https://api.telegram.org/bot<token>/getUpdates` → find your numeric `chat.id`.
+
+> **Privacy:** messenger channels send the project name and full path to an external service. Leave them off if that's sensitive. Network failures are isolated (5 s timeout) and never block Claude Code.
 
 ## Platform support
 

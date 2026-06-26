@@ -77,8 +77,12 @@ node src/cli.js install
 
 ```jsonc
 {
-  "stop":         { "window": false, "toast": true, "sound": true },
-  "notification": { "window": false, "toast": true, "sound": true }
+  "stop":         { "window": false, "toast": true, "sound": true, "webhook": false, "telegram": false },
+  "notification": { "window": false, "toast": true, "sound": true, "webhook": false, "telegram": false },
+  "channels": {
+    "webhook":  { "url": "https://hooks.slack.com/services/XXX/YYY/ZZZ" },
+    "telegram": { "botToken": "123456:ABC-DEF...", "chatId": "987654321" }
+  }
 }
 ```
 
@@ -87,10 +91,28 @@ node src/cli.js install
 | `toast` | 프로젝트명 + 경로가 담긴 OS 데스크톱 알림 | **on** |
 | `sound` | 완료/대기를 구분하는 특색 있는 소리 | **on** |
 | `window` | 터미널 벨 + 탭 제목 (작업표시줄/탭 깜빡임) | off |
+| `webhook` | 임의 URL로 POST — Slack / Discord / ntfy / 커스텀 | off |
+| `telegram` | Telegram 봇으로 메시지 전송 | off |
 
 ### `window` 채널에 대하여
 
 `window` 채널은 터미널 벨과 탭 제목 변경을 보냅니다. 이게 **눈에 보이는** 깜빡임이 되는지는 터미널의 벨 설정에 따라 다르고, Claude Code 세션 안에서는 탭 제목을 Claude Code가 직접 관리하므로 **기본 OFF**입니다. 쓰고 싶다면 설정에서 켠 뒤, 터미널의 시각적 벨도 켜세요 (예: Windows Terminal → *벨 알림 스타일* → "창"/"작업 표시줄").
+
+### 메신저 채널 (자리를 비워도 알림)
+
+토스트·소리는 PC 앞에 있을 때만 통합니다. `webhook`·`telegram` 채널은 휴대폰/팀으로 푸시해요. 인증 정보를 `channels`에 넣고(로컬에만 저장, 저장소엔 안 들어감) 이벤트별 토글을 `true`로 켜세요.
+
+**범용 `webhook`** — `channels.webhook.url` 설정. 본문에 `text`(Slack)·`content`(Discord)·구조화 필드가 함께 들어가 바로 동작합니다:
+- **Slack** — [Incoming Webhook](https://api.slack.com/messaging/webhooks) 만들어 URL 사용
+- **Discord** — 서버 설정 → 연동 → 웹후크 → 새 웹후크 → URL 복사
+- **ntfy** — `https://ntfy.sh/내토픽` (또는 자체 호스팅 서버)
+
+**`telegram`** — `channels.telegram.botToken` + `chatId` 설정:
+1. 텔레그램에서 [@BotFather](https://t.me/BotFather) → `/newbot` → 봇 토큰 복사
+2. 새 봇과 대화 시작(아무 메시지나 전송)
+3. `https://api.telegram.org/bot<토큰>/getUpdates` 열어서 숫자 `chat.id` 확인
+
+> **프라이버시:** 메신저 채널은 프로젝트명·전체 경로를 외부 서비스로 보냅니다. 민감하면 끄세요. 네트워크 실패는 격리되며(5초 타임아웃) Claude Code를 막지 않습니다.
 
 ## 플랫폼 지원
 
