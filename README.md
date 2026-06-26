@@ -30,7 +30,27 @@ Each event runs `claude-code-notifier hook <event>`, which reads the session inf
 
 ## Install
 
-> Prototype stage — install from source. (npm publish is planned.)
+```bash
+npm install -g @gem-o-b/claude-code-notifier
+claude-code-notifier install
+```
+
+`install` adds the hooks to `~/.claude/settings.json` and creates a default config at `~/.claude-code-notifier/config.json`. **Restart your Claude Code session** for the hooks to take effect.
+
+Try it right away:
+
+```bash
+claude-code-notifier test
+```
+
+To remove the hooks:
+
+```bash
+claude-code-notifier uninstall
+```
+
+<details>
+<summary>Install from source instead</summary>
 
 ```bash
 git clone https://github.com/Gem-o-b/claude-code-notifier.git
@@ -39,19 +59,7 @@ npm install
 node src/cli.js install
 ```
 
-`install` adds the hooks to `~/.claude/settings.json` and creates a default config at `~/.claude-code-notifier/config.json`. **Restart your Claude Code session** for the hooks to take effect.
-
-Try it without Claude Code:
-
-```bash
-node src/cli.js test
-```
-
-To remove the hooks:
-
-```bash
-node src/cli.js uninstall
-```
+</details>
 
 ## Commands
 

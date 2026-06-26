@@ -30,7 +30,27 @@ Claude Code는 특정 시점에 명령을 실행할 수 있습니다. `claude-co
 
 ## 설치
 
-> 프로토타입 단계 — 소스에서 설치합니다. (npm 공개 예정)
+```bash
+npm install -g @gem-o-b/claude-code-notifier
+claude-code-notifier install
+```
+
+`install`은 `~/.claude/settings.json`에 hook을 등록하고, 기본 설정을 `~/.claude-code-notifier/config.json`에 생성합니다. **Claude Code 세션을 재시작**해야 hook이 적용됩니다.
+
+바로 확인:
+
+```bash
+claude-code-notifier test
+```
+
+hook 제거:
+
+```bash
+claude-code-notifier uninstall
+```
+
+<details>
+<summary>소스에서 설치하기</summary>
 
 ```bash
 git clone https://github.com/Gem-o-b/claude-code-notifier.git
@@ -39,19 +59,7 @@ npm install
 node src/cli.js install
 ```
 
-`install`은 `~/.claude/settings.json`에 hook을 등록하고, 기본 설정을 `~/.claude-code-notifier/config.json`에 생성합니다. **Claude Code 세션을 재시작**해야 hook이 적용됩니다.
-
-Claude Code 없이 바로 확인:
-
-```bash
-node src/cli.js test
-```
-
-hook 제거:
-
-```bash
-node src/cli.js uninstall
-```
+</details>
 
 ## 명령어
 
